@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    /* Layout utama */
+    .container {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    /* Header di atas */
+    header {
+      background-color: #34495e;
+      padding: 10px;
+      text-align: right;
+      color: white;
+    }
+
+    header button {
+      background-color: #e74c3c;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    header button:hover {
+      background-color: #c0392b;
+    }
+
+    /* Konten utama dengan sidebar dan content */
+    .main {
+      display: flex;
+      flex: 1;
+    }
+
+    /* Sidebar di kiri */
+    aside {
+      width: 220px;
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    aside h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    aside a {
+      color: white;
+      display: block;
+      padding: 10px 0;
+      text-decoration: none;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    aside a:hover {
+      background-color: #34495e;
+      padding-left: 10px;
+    }
+
+    /* Isi konten di tengah */
+    .content {
+      flex: 1;
+      padding: 20px;
+      background-color: #ecf0f1;
+    }
+
+    .content h2 {
+      margin-bottom: 20px;
+    }
+
+    /* Tombol Tambah Mahasiswa */
+    .btn-tambah {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .btn-tambah:hover {
+      background-color: #2980b9;
+    }
+
+    /* Footer di bawah */
+    footer {
+      background-color: #34495e;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+    }
+
+    /* Gaya dasar untuk tabel */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #34495e;
+      color: white;
+    }
+
+    td button {
+      padding: 6px 12px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    td button.editMahasiswa {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    td button.hapusMahasiswa {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    td button:hover {
+      opacity: 0.8;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .modal form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal label {
+      margin-bottom: 5px;
+    }
+
+    .modal input {
+      margin-bottom: 15px;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    .modal button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .modal button[type="submit"] {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .modal button[type="button"] {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .modal button:hover {
+      opacity: 0.9;
+    }
+
+  </style>
+</head>
+<body>
+
+    <!-- Wrapper utama -->
+    <div class="container">
+
+        <!-- Header di atas -->
+        <header>
+            <button>Log Out</button>
+        </header>
+
+        <!-- Main Content: Sidebar + Content -->
+        <div class="main">
+        
+            <!-- Sidebar -->
+            <aside>
+                <h1>Admin Panel</h1>
+                <nav>
+                    <a href="#">Dashboard</a>
+                    <a href="#">Mahasiswa</a>
+                    <a href="#">Settings</a>
+                </nav>
+            </aside>
+
+            <!-- Konten -->
+            <div class="content">
+                <h2>Daftar Mahasiswa</h2>
+                <button id="tambahMahasiswa" class="btn-tambah">Tambah Mahasiswa</button>
+                
+                <!-- Tabel List Mahasiswa -->
+                <table>
+                    <thead>
+                        <tr>
+                        <th>#</th>
+                        <th>Nama</th>
+                        <th>Jurusan</th>
+                        <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>Informatika</td>
+                        <td>
+                            <button class="editMahasiswa" data-id="1">Edit</button>
+                            <button class="hapusMahasiswa" data-id="1">Hapus</button>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>Ekonomi</td>
+                        <td>
+                            <button class="editMahasiswa" data-id="2">Edit</button>
+                            <button class="hapusMahasiswa" data-id="2">Hapus</button>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer di bawah -->
+        <footer>
+            &copy; 2024 Admin Dashboard
+        </footer>
+
+    </div>
+
+    <!-- Modal Tambah Mahasiswa -->
+    <div id="modal-create" class="modal-overlay">
+        <div class="modal">
+            <h2>Tambah Mahasiswa</h2>
+            <form id="formTambahMahasiswa">
+                <label for="name">Nama:</label>
+                <input type="text" id="nameTambah" name="name" required>
+                <label for="jurusan">Jurusan:</label>
+                <input type="text" id="jurusanTambah" name="jurusan" required>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="button" id="closeModalCreate">Batal</button>
+                    <button type="submit">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Mahasiswa -->
+    <div id="modal-edit" class="modal-overlay">
+        <div class="modal">
+            <h2>Edit Mahasiswa</h2>
+            <form id="formEditMahasiswa">
+                <input type="hidden" id="idEdit">
+                <label for="name">Nama:</label>
+                <input type="text" id="nameEdit" name="name" required>
+                <label for="jurusan">Jurusan:</label>
+                <input type="text" id="jurusanEdit" name="jurusan" required>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="button" id="closeModalEdit">Batal</button>
+                    <button type="submit">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tambah Mahasiswa Modal
+        const modalCreate = document.getElementById('modal-create');
+        const tambahMahasiswaBtn = document.getElementById('tambahMahasiswa');
+        const closeModalCreateBtn = document.getElementById('closeModalCreate');
+        
+        tambahMahasiswaBtn.addEventListener('click', () => {
+            modalCreate.style.display = 'flex';
+        });
+
+        closeModalCreateBtn.addEventListener('click', () => {
+            modalCreate.style.display = 'none';
+        });
+
+        // Edit Mahasiswa Modal
+        const modalEdit = document.getElementById('modal-edit');
+        const closeModalEditBtn = document.getElementById('closeModalEdit');
+        
+        document.querySelectorAll('.editMahasiswa').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const id = event.target.getAttribute('data-id');
+                // Fetch data for the selected Mahasiswa (Example)
+                const mahasiswa = { id, name: "John Doe", jurusan: "Informatika" }; // This should be fetched dynamically
+                document.getElementById('idEdit').value = mahasiswa.id;
+                document.getElementById('nameEdit').value = mahasiswa.name;
+                document.getElementById('jurusanEdit').value = mahasiswa.jurusan;
+                modalEdit.style.display = 'flex';
+            });
+        });
+
+        closeModalEditBtn.addEventListener('click', () => {
+            modalEdit.style.display = 'none';
+        });
+
+        // Hapus Mahasiswa Confirmation
+        document.querySelectorAll('.hapusMahasiswa').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const id = event.target.getAttribute('data-id');
+                if (confirm(`Apakah kamu yakin mau menghapus mahasiswa dengan ID ${id}?`)) {
+                    alert(`Mahasiswa dengan ID ${id} berhasil dihapus!`);
+                }
+            });
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === modalCreate) {
+                modalCreate.style.display = 'none';
+            }
+            if (event.target === modalEdit) {
+                modalEdit.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
